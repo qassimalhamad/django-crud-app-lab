@@ -1,0 +1,65 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/helmets/helmet-detail.css' %}" />
+{% endblock %} {% block content %}
+<section class="cat-container">
+  <div class="helmet-img">
+    <img
+      class="MaxHelmet"
+      src="{% static 'images/MaxHelmet.svg' %}"
+      alt="A skater boy cat"
+    />
+  </div>
+  <div class="cat-details">
+    <h2 class="card-title"><strong>{{ helmet.driver }}</strong></h2>
+    <p><strong>Production Year : {{ helmet.year }}</strong></p>
+    <p><small>Description : {{ helmet.description }}</small></p>
+  </div>
+  <div class="cat-actions">
+    <a href="{% url 'helmet-update' helmet.id %}" class="btn warn">Edit</a>
+    <a href="{% url 'helmet-delete' helmet.id %}" class="btn danger">Delete</a>
+  </div>
+</section>
+<div class="feedings-toy-container">
+  <section class="feedings">
+    <div class="subsection-title">
+      <h2>Brands</h2>
+    </div>
+    <h3>Add a Brand</h3>
+    <form method="post" class="subsection-content" autocomplete="off">
+      {% csrf_token %} {{ brand_form.as_p }}
+      <button type="submit" class="btn submit">Add Brand</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for brand in helmet.brands.all %}
+        <tr>
+          <td>{{ brand.get_brand_display }}</td>
+          <td>
+            <form
+              action="{% url 'brand-delete' brand.id %}"
+              method="post"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button type="submit" class="btn danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="2">No brands added yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+
+{% endblock %}
